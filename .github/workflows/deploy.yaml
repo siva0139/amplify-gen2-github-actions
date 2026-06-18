@@ -34,10 +34,10 @@ jobs:
           echo "#install npm packages"
           npm ci
           cd amplify/api && npm ci && cd -
-      - name: backend deploy
-        run: |
-          echo "#amplify gen2 backend deploy"
-          npx ampx pipeline-deploy --branch dev --appId d206y4p0e7tbw6 --debug
+      #- name: backend deploy
+        #run: |
+          #echo "#amplify gen2 backend deploy"
+          #npx ampx pipeline-deploy --branch dev --appId d206y4p0e7tbw6 --debug
       - name: frontend build and zip
         run: |
           echo "#frontend build and zip"
