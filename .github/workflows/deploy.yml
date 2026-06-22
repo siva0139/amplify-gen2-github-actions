@@ -34,13 +34,15 @@ jobs:
           echo "#install npm packages"
           npm ci
           cd amplify/api && npm ci && cd -
-      - name: Generate Amplify Outputs
-        run: |
-          npx ampx generate outputs --branch Dev --app-id d1136cf2i3ytwj --out-dir ./
       - name: backend deploy
         run: |
-          # This command creates the CloudFormation stack in AWS
+          # This creates the CloudFormation stack in AWS
           npx ampx pipeline-deploy --branch Dev --app-id d1136cf2i3ytwj --yes
+
+      - name: Generate Amplify Outputs
+        run: |
+          # Now that the stack exists, this will succeed
+          npx ampx generate outputs --branch Dev --app-id d1136cf2i3ytwj --out-dir ./
       - name: frontend build and zip
         run: |
           echo "#frontend build and zip"
