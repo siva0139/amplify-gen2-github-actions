@@ -1,0 +1,58 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_IAM_ROLE_ARN: ${{ vars.AWS_IAM_ROLE_ARN }}
+      AWS_REGION: "ap-northeast-1"
+      AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
+      AMPLIFY_ENV_NAME: "main"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::366085906151:role/gh-role
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: install npm packages
+        run: |
+          echo "#install npm packages"
+          npm ci
+          cd amplify/api && npm ci && cd -
+      - name: Generate Amplify Outputs
+        run: |
+          npx ampx generate outputs --branch Dev --app-id d1136cf2i3ytwj > amplify_outputs.json
+      #- name: backend deploy
+        #run: |
+          #echo "#amplify gen2 backend deploy"
+          #npx ampx pipeline-deploy --branch dev --appId d206y4p0e7tbw6 --debug
+      - name: frontend build and zip
+        run: |
+          echo "#frontend build and zip"
+          npm run build
+          cd ./build/client && zip -r ./build.zip * && cd -
+      - name: frontend deploy
+        run: |
+          echo "#create frontend deploy job"
+          RESPONSE=$(aws amplify create-deployment --branch-name Dev --app-id d1136cf2i3ytwj)
+          JOB_ID=$(echo $RESPONSE | jq -r '.jobId')
+          ZIP_URL=$(echo $RESPONSE | jq -r '.zipUploadUrl') 
+          echo "#upload build.zip"
+          curl -X PUT -T "./build/client/build.zip" -H "Content-Type: application/zip" "$ZIP_URL"
+          echo "#start frontend deploy job"
+          aws amplify start-deployment --app-id d1136cf2i3ytwj --branch-name Dev --job-id $JOB_ID
