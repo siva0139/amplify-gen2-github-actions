@@ -46,10 +46,10 @@ jobs:
       - name: frontend deploy
         run: |
           echo "#create frontend deploy job"
-          RESPONSE=$(aws amplify create-deployment --branch-name dev --app-id d206y4p0e7tbw6)
+          RESPONSE=$(aws amplify create-deployment --branch-name Dev --app-id d1136cf2i3ytwj)
           JOB_ID=$(echo $RESPONSE | jq -r '.jobId')
           ZIP_URL=$(echo $RESPONSE | jq -r '.zipUploadUrl') 
           echo "#upload build.zip"
           curl -X PUT -T "./build/client/build.zip" -H "Content-Type: application/zip" "$ZIP_URL"
           echo "#start frontend deploy job"
-          aws amplify start-deployment --app-id d206y4p0e7tbw6 --branch-name dev --job-id $JOB_ID
+          aws amplify start-deployment --app-id d1136cf2i3ytwj --branch-name Dev --job-id $JOB_ID
