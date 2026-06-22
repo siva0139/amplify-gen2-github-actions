@@ -36,7 +36,7 @@ jobs:
           cd amplify/api && npm ci && cd -
       - name: Generate Amplify Outputs
         run: |
-          npx ampx generate outputs --branch Dev --app-id d1136cf2i3ytwj > amplify_outputs.json
+          npx ampx generate outputs --branch Dev --app-id d1136cf2i3ytwj --out-dir ./
       #- name: backend deploy
         #run: |
           #echo "#amplify gen2 backend deploy"
