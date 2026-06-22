@@ -37,7 +37,7 @@ jobs:
       - name: backend deploy
         run: |
           # This creates the CloudFormation stack in AWS
-          npx ampx pipeline-deploy --branch Dev --app-id d1136cf2i3ytwj --yes
+          npx ampx pipeline-deploy --branch Dev --app-id d1136cf2i3ytwj 
 
       - name: Generate Amplify Outputs
         run: |
