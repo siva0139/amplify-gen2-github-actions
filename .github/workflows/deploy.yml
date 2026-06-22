@@ -34,6 +34,10 @@ jobs:
           echo "#install npm packages"
           npm ci
           cd amplify/api && npm ci && cd -
+      # ADD THIS STEP HERE
+      - name: Bootstrap CDK
+        run: |
+          npx cdk bootstrap aws://366085906151/us-east-1
       - name: backend deploy
         run: |
           # This creates the CloudFormation stack in AWS
