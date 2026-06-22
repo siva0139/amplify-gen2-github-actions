@@ -37,10 +37,10 @@ jobs:
       - name: Generate Amplify Outputs
         run: |
           npx ampx generate outputs --branch Dev --app-id d1136cf2i3ytwj --out-dir ./
-      #- name: backend deploy
-        #run: |
-          #echo "#amplify gen2 backend deploy"
-          #npx ampx pipeline-deploy --branch dev --appId d206y4p0e7tbw6 --debug
+      - name: backend deploy
+        run: |
+          # This command creates the CloudFormation stack in AWS
+          npx ampx pipeline-deploy --branch Dev --app-id d1136cf2i3ytwj --yes
       - name: frontend build and zip
         run: |
           echo "#frontend build and zip"
